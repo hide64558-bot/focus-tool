@@ -1,0 +1,129 @@
+
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Focus Timer + Blocker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0; padding: 0;
+      background: #f5f5f5;
+      color: #222;
+      text-align: center;
+    }
+    header {
+      background: #4caf50;
+      color: white;
+      padding: 20px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .container {
+      margin: 40px auto;
+      max-width: 600px;
+    }
+    button {
+      background: #4caf50;
+      color: white;
+      border: none;
+      padding: 15px 25px;
+      font-size: 18px;
+      margin: 10px;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+    button:hover { background: #45a049; }
+    #focusArea {
+      display: none;
+      margin-top: 20px;
+    }
+    #notepad {
+      width: 90%;
+      height: 200px;
+      margin: 10px auto;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    #timer {
+      font-size: 32px;
+      margin: 20px 0;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <header>One-Click Focus Tool</header>
+  <div class="container">
+    <button id="startFocus">Start Focus Mode</button>
+    <button id="restoreTabs">Restore Tabs</button>
+
+    <div id="focusArea">
+      <div id="timer">25:00</div>
+      <textarea id="notepad" placeholder="Write your notes here..."></textarea>
+      <button id="startPomodoro">Start Pomodoro</button>
+      <button id="stopPomodoro">Stop</button>
+    </div>
+  </div>
+
+  <script>
+    let focusArea = document.getElementById("focusArea");
+    let timerDisplay = document.getElementById("timer");
+    let savedTabs = [];
+    let timerInterval;
+    let timeLeft = 1500; // 25 minutes
+
+    // Start Focus Mode
+    document.getElementById("startFocus").onclick = () => {
+      // Simulate saving open tabs
+      savedTabs = ["YouTube", "Facebook", "Twitter"]; 
+      alert("Saved your tabs and blocked distractions!");
+      focusArea.style.display = "block";
+      document.body.style.background = "#fff";
+    };
+
+    // Restore Tabs
+    document.getElementById("restoreTabs").onclick = () => {
+      if (savedTabs.length > 0) {
+        alert("Restored Tabs: " + savedTabs.join(", "));
+        savedTabs = [];
+      } else {
+        alert("No tabs saved.");
+      }
+    };
+
+    // Start Pomodoro
+    document.getElementById("startPomodoro").onclick = () => {
+      clearInterval(timerInterval);
+      timeLeft = 1500; // reset to 25 min
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        if (timeLeft > 0) {
+          timeLeft--;
+          updateTimerDisplay();
+        } else {
+          clearInterval(timerInterval);
+          alert("Time's up! Take a 5 min break.");
+          timeLeft = 300; // 5 min break
+          updateTimerDisplay();
+        }
+      }, 1000);
+    };
+
+    // Stop Timer
+    document.getElementById("stopPomodoro").onclick = () => {
+      clearInterval(timerInterval);
+      timerDisplay.textContent = "25:00";
+    };
+
+    function updateTimerDisplay() {
+      let minutes = Math.floor(timeLeft / 60);
+      let seconds = timeLeft % 60;
+      timerDisplay.textContent =
+        `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+    }
+  </script>
+</body>
+</html>
